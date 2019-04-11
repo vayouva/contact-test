@@ -3,9 +3,11 @@
 {% block title %} Inscription {% endblock %}
 
 {% block body %}
-    <div>
+    <div class="container mt-4">
         {{ form_start(our_form) }}
         {{ form_widget(our_form) }}
+
+        <input class="btn btn-primary" type="submit" value="Send">
         {{ form_end(our_form) }}
     </div>
 {% endblock %}
