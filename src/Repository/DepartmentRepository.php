@@ -22,9 +22,9 @@ class DepartmentRepository extends ServiceEntityRepository
     // /**
     //  * @return Department[] Returns an array of Department objects
     //  */
-    /*
-    public function findByExampleField($value)
-    {
+	
+	/*
+    public function findByExampleField($value) {
         return $this->createQueryBuilder('d')
             ->andWhere('d.exampleField = :val')
             ->setParameter('val', $value)

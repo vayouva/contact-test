@@ -7,8 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DepartmentRepository")
  */
-class Department
-{
+class Department {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -54,4 +53,8 @@ class Department
 
         return $this;
     }
+	
+	public function __toString() {
+		return $this->dep_name;
+	}
 }

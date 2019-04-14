@@ -5,16 +5,34 @@ namespace App\Controller;
 use App\Entity\Contact;
 use App\Form\ContactType;
 use App\Notification\ContactNotification;
+use App\Repository\DepartmentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ContactController extends AbstractController {
+	
+	/**
+	 * @var DepartmentRepository
+	 */
+	private $departmentRepository;
+	
+	/**
+	 * ContactController constructor.
+	 *
+	 * @param DepartmentRepository $departmentRepository
+	 */
+	public function __construct(DepartmentRepository $departmentRepository) {
+		$this->departmentRepository = $departmentRepository;
+	}
+	
 	/**
 	 * @Route("/contact", name="contact")
 	 *
 	 */
     public function contact(Request $request, \Swift_Mailer $mailer, ContactNotification $notification) {
+    	$departments = $this->departmentRepository->findAll();
+    	dump($departments);
     	$contact = new Contact();
     	$form = $this->createForm(ContactType::class);
     	$form->handleRequest($request);
@@ -49,6 +67,7 @@ class ContactController extends AbstractController {
     	}
         return $this->render("contact/contact.html.twig", [
             'our_form' => $form->createView(),
+			'departments' => $departments
         ]);
     }
 }
