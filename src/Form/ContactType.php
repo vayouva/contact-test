@@ -7,7 +7,6 @@ use App\Entity\Department;
 use App\Repository\DepartmentRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -31,8 +30,6 @@ class ContactType extends AbstractType {
 	}
 	
 	public function buildForm(FormBuilderInterface $builder, array $options) {
-		$choices = $this->departmentRepository->findAll();
-		dump($choices);
         $builder
             ->add('first_name', TextType::class, [
 					'label' => 'First Name'
@@ -45,7 +42,7 @@ class ContactType extends AbstractType {
 			])
 			->add('department', EntityType::class, [
 				'required' => true,
-				'class' => Department::class ,
+				'class' => Department::class,
 				'multiple' => false
 			])
 			->add('message', TextareaType::class, [

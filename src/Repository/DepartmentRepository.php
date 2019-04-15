@@ -14,11 +14,16 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class DepartmentRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
-    {
+    public function __construct(RegistryInterface $registry) {
         parent::__construct($registry, Department::class);
     }
-
+	
+    public function findEmailByDepName() {
+		return $this->createQueryBuilder('d')
+			->andWhere('d.dep_name = dep_name')
+			->getQuery()
+			->getResult();
+	}
     // /**
     //  * @return Department[] Returns an array of Department objects
     //  */
