@@ -9,6 +9,7 @@ use App\Notification\ContactNotification;
 use App\Repository\DepartmentRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use function PHPSTORM_META\type;
+use Swift_Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,35 +41,34 @@ class ContactController extends AbstractController {
 	/**
 	 * @Route("/contact", name="contact")
 	 * @param Request $request
-	 * @param ContactNotification $notification
+	 * @param Swift_Mailer $mailer
 	 *
 	 * @return Response
 	 */
-    public function contact(Request $request) : Response {
+    public function contact(Request $request, Swift_Mailer $mailer) : Response {
     	$form = $this->createForm(ContactType::class);
     	$form->handleRequest($request);
     	if ($form->isSubmitted() && $form->isValid()) {
     		$contact = $form->getData();
 			$dep = $contact->getDepartment();
-			dump($dep);
     		$this->manager->persist($contact);
     		$this->manager->flush();
     		$this->addFlash('success', 'Your registration has been submitted successfully');
-			//return $this->redirectToRoute("contact");
 			
-			$dep_email = $this->departmentRepository->findBy(['dep_name' => $dep]);
-			dump($dep_email[0]->getResponsibleEmail());
-			/*$message = (new \Swift_Message('You have a new registration in your department'))
-				->setFrom($contact['email'])
-				->setTo($dep_email)
+			$dep_data = $this->departmentRepository->findBy(['dep_name' => $dep]);
+			dump($dep_data[0]->getResponsibleEmail());
+			$message = (new \Swift_Message('You have a new registration in your department'))
+				->setFrom($contact->getEmail())
+				->setTo($dep_data[0]->getResponsibleEmail())
 				->setBody(
 					// templates/emails/registration.html.twig
-						$contactFormData['message'],
-						'text/html'
+					$contact->getMessage(),
+					'text/html'
 				);
-		*/
-			//$mailer->send($message);
-    	}
+			$mailer->send($message);
+			//return $this->redirectToRoute("contact");
+		
+		}
         return $this->render("contact/contact.html.twig", [
             'our_form' => $form->createView()
         ]);
