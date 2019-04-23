@@ -2,13 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Contact;
-use App\Entity\Department;
 use App\Form\ContactType;
-use App\Notification\ContactNotification;
 use App\Repository\DepartmentRepository;
 use Doctrine\Common\Persistence\ObjectManager;
-use function PHPSTORM_META\type;
 use Swift_Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,19 +50,18 @@ class ContactController extends AbstractController {
     		$this->manager->persist($contact);
     		$this->manager->flush();
     		$this->addFlash('success', 'Your registration has been submitted successfully');
-			
+			//$dep_data[0]->getResponsibleEmail()
 			$dep_data = $this->departmentRepository->findBy(['dep_name' => $dep]);
 			dump($dep_data[0]->getResponsibleEmail());
 			$message = (new \Swift_Message('You have a new registration in your department'))
 				->setFrom($contact->getEmail())
 				->setTo($dep_data[0]->getResponsibleEmail())
 				->setBody(
-					// templates/emails/registration.html.twig
 					$contact->getMessage(),
-					'text/html'
+					'text/plain'
 				);
 			$mailer->send($message);
-			//return $this->redirectToRoute("contact");
+			return $this->redirectToRoute("contact");
 		
 		}
         return $this->render("contact/contact.html.twig", [

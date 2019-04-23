@@ -502,6 +502,9 @@
     "symfony/yaml": {
         "version": "v4.2.5"
     },
+    "true/punycode": {
+        "version": "v2.1.1"
+    },
     "twig/twig": {
         "version": "v2.7.4"
     },
