@@ -33,7 +33,7 @@ class AppFixtures extends Fixture {
 		foreach ($departmentsNames as $i) {
 			$department = new Department();
 			$department->setDepName($i);
-			$department->setResponsibleEmail('testitefficence@gmail.com');
+			$department->setResponsibleEmail('testitefficience@gmail.com');
 			$manager->persist($department);
 		}
 
