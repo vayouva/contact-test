@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Department;
 use App\Form\ContactType;
 use App\Repository\DepartmentRepository;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -41,31 +42,36 @@ class ContactController extends AbstractController {
 	 *
 	 * @return Response
 	 */
+	
     public function contact(Request $request, Swift_Mailer $mailer) : Response {
+    	//Creating the form and handling the request
     	$form = $this->createForm(ContactType::class);
     	$form->handleRequest($request);
+    	// if the form is submitted and the data from the form is valid, we start processing the data
     	if ($form->isSubmitted() && $form->isValid()) {
-    		$contact = $form->getData();
-			$dep = $contact->getDepartment();
-    		$this->manager->persist($contact);
+    		// Adding the contact's data to the database
+    		$contactData = $form->getData();
+    		$this->manager->persist($contactData);
     		$this->manager->flush();
+    		
+    		
     		$this->addFlash('success', 'Your registration has been submitted successfully');
-			//$dep_data[0]->getResponsibleEmail()
-			$dep_data = $this->departmentRepository->findBy(['dep_name' => $dep]);
-			dump($dep_data[0]->getResponsibleEmail());
-			$message = (new \Swift_Message('You have a new registration in your department'))
-				->setFrom($contact->getEmail())
-				->setTo($dep_data[0]->getResponsibleEmail())
+    		$message = (new \Swift_Message('You have a new registration in your department'))
+				->setFrom($contactData->getEmail())
+				->setTo(($contactData->getDepartment())->getResponsibleEmail())
 				->setBody(
-					$contact->getMessage(),
+					$contactData->getMessage(),
 					'text/plain'
 				);
 			$mailer->send($message);
 			return $this->redirectToRoute("contact");
-		
 		}
         return $this->render("contact/contact.html.twig", [
             'our_form' => $form->createView()
         ]);
     }
+    
+    private function registerContactTodb($form) {
+    
+	}
 }
