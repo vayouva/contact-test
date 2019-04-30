@@ -3,6 +3,6 @@ swiftmailer:
     auth_mode: login
     port: 465
     host: smtp.gmail.com
-    username: 'username@gmail.com'
-    password: 'password'
+    username: 'testitefficience@gmail.com'
+    password: 'tototititata'
     

@@ -37,20 +37,19 @@ class Contact
 	 * @Assert\Length(min="2", max="100")
      */
     private $email;
-
-    /**
-     * @ORM\Column(name="department", type="string", length=255)
-	 * @Assert\NotBlank()
-	 * @Assert\Length(min="2", max="100")
-     */
-    private $department;
-
+    
     /**
      * @ORM\Column(name="message", type="text")
 	 * @Assert\NotBlank()
 	 * @Assert\Length(min="10")
      */
     private $message;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="contacts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $department;
 
     public function getId(): ?int
     {
@@ -93,18 +92,7 @@ class Contact
         return $this;
     }
 
-    public function getDepartment(): ?string
-    {
-        return $this->department;
-    }
-
-    public function setDepartment(string $department): self
-    {
-        $this->department = $department;
-
-        return $this;
-    }
-
+    
     public function getMessage(): ?string
     {
         return $this->message;
@@ -113,6 +101,18 @@ class Contact
     public function setMessage(string $message): self
     {
         $this->message = $message;
+
+        return $this;
+    }
+
+    public function getDepartment(): ?Department
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?Department $department): self
+    {
+        $this->department = $department;
 
         return $this;
     }
