@@ -12,22 +12,28 @@ class AppFixtures extends Fixture {
     	$departmentsNames = [
     		'1' => 'Direction',
 			'2' => 'Human Resources',
-			'3' => 'Development',
-			'4' => 'Communication',
-			'5' => 'Accounting'
+			'3' => 'Communication',
+			'4' => 'Accounting'
 		];
+  		
+    	// Creating the first department to relate it to the contact below
+    	$department = new Department();
+    	$department->setDepName('Development');
+    	$department->setResponsibleEmail('testitefficence@gmail.com');
+		$manager->persist($department);
+    	
 		$contact = new Contact();
 		$contact->setFirstName('John');
 		$contact->setLastName('Doe');
 		$contact->setEmail('john.doe@example.com');
-		$contact->setDepartment("Human resources");
-		$contact->setMessage('Hello, I would like to get more infomations about your products, call me back please.');
+		$contact->setDepartment($department);
+		$contact->setMessage('Hello, I would like to get more informations about your products, call me back please.');
 		$manager->persist($contact);
 		
 		foreach ($departmentsNames as $i) {
 			$department = new Department();
 			$department->setDepName($i);
-			$department->setResponsibleEmail(strtolower(str_replace(' ', '_', $i)).'.responsible@example.com');
+			$department->setResponsibleEmail('testitefficence@gmail.com');
 			$manager->persist($department);
 		}
 
