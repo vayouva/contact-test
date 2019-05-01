@@ -5,6 +5,9 @@ namespace App\Notification;
 
 use App\Entity\Contact;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class ContactNotification {
 	/**
@@ -28,14 +31,24 @@ class ContactNotification {
 		$this->renderer = $renderer;
 	}
 	
+	/**
+	 * @param Contact $contact
+	 *
+	 * @throws LoaderError
+	 * @throws RuntimeError
+	 * @throws SyntaxError
+	 */
 	public function notify(Contact $contact) {
-		$message = (new \Swift_Message("Registration"))
+		$message = (new \Swift_Message('You have a new registration in your department'))
 			->setFrom($contact->getEmail())
-			->setTo('contact@agence.com')
-			->setReplyTo($contact->getEmail())
+			->setTo(($contact->getDepartment())->getResponsibleEmail())
+			//->setTo('your real email address')
 			->setBody($this->renderer->render('emails/contact.html.twig', [
-				'contact' => $contact
-			]), 'text/html');
+					'contact' => $contact
+				]),
+				'text/html'
+			);
+		
 		$this->mailer->send($message);
 	}
 }
