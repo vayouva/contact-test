@@ -53,8 +53,7 @@ class ContactController extends AbstractController {
     		$contactData = $form->getData();
     		$this->manager->persist($contactData);
     		$this->manager->flush();
-    		
-    		
+    		//setting up the flash message to display if the registration didn't went wrong
     		$this->addFlash('success', 'Your registration has been submitted successfully');
     		$message = (new \Swift_Message('You have a new registration in your department'))
 				->setFrom($contactData->getEmail())
@@ -63,8 +62,9 @@ class ContactController extends AbstractController {
 					$contactData->getMessage(),
 					'text/plain'
 				);
+    
 			$mailer->send($message);
-			return $this->redirectToRoute("contact");
+			//return $this->redirectToRoute("contact");
 		}
         return $this->render("contact/contact.html.twig", [
             'our_form' => $form->createView()
